@@ -1,19 +1,11 @@
 // The name of our exported RNBO patch
 const patchExportURL = "https://cdn.jsdelivr.net/gh/apogees/www-js@release/www/export/snd.export.json";
-let note = 50;
+let note = undefined;
 let mouseDownX = 0;
 let mouseDownY = 0;
 let currentLFOValue = 1.0;
 let radius = 40;
 let rounding = 1;
-let midpoint = {
-    p: { x: 0, y: 0 },
-    v: { x: 0, y: 0 },
-    a: { x: 0, y: 0 }
-};
-let k = 0.03;
-let damping = 0.05;
-let gravity = -1.6;
 
 let device, context;
 async function setupRNBO() {
@@ -31,23 +23,6 @@ async function setupRNBO() {
 // if device and context have been assigned
 setupRNBO();
 
-function updateMidpoint() {
-    midpoint.p.x += midpoint.v.x;
-    midpoint.p.y += midpoint.v.y;
-    midpoint.v.x += midpoint.a.x;
-    midpoint.v.y += midpoint.a.y;
-    // midpoint.v.x *= damping;
-
-    midpoint.a.x = k * (mouseX - midpoint.p.x);
-    midpoint.a.x += -k * (midpoint.p.x - mouseDownX);
-    midpoint.a.x -= damping * (midpoint.v.x * midpoint.v.x) * Math.sign(midpoint.v.x);
-    midpoint.a.y = k * (mouseY - midpoint.p.y);
-    midpoint.a.y += -k * (midpoint.p.y - mouseDownY);
-    midpoint.a.y += -gravity;
-    midpoint.a.y -= damping * (midpoint.v.y * midpoint.v.y) * Math.sign(midpoint.v.y);
-    // midpoint.v.y = 0.01;
-}
-
 function setup() {
     colorMode(HSB, 255);
     createCanvas(800, 800);
@@ -56,29 +31,22 @@ function setup() {
 function draw() {
     if (!mouseIsPressed) {
         currentLFOValue = 1.0;
-    } else {
-        currentLFOValue = 0.1;
     }
     const weight = map(currentLFOValue, 0, 1, 0, 20);
     const saturation = map(currentLFOValue, 0, 1, 255, 128);
     radius = map(currentLFOValue, 0, 1, 5, 40);
 
-    stroke(0);
-    strokeWeight(1);
-    fill(map(note, 50, 70, 0, 255), sqrt(saturation) * 5 + 50, 255);
+    noStroke();
+    // fill(255, 5);
+    fill(map(note, 50, 70, 0, 255), saturation * 0.5, 255, 128);
     rect(0, 0, width, height);
 
     // Draw a line from where the mouse was pressed to where it is now
     if (mouseIsPressed) {
         push();
         strokeWeight(weight);
-        stroke(map(note, 50, 70, 0, 255), saturation, 255);
-
-        curve(mouseDownX, mouseDownY, mouseDownX, mouseDownY, midpoint.p.x, midpoint.p.y, mouseX, mouseY);
-        curve(mouseDownX, mouseDownY, midpoint.p.x, midpoint.p.y, mouseX, mouseY, mouseX, mouseY);
-        // curve(midpoint.p.x, midpoint.p.y, midpoint.p.x, midpoint.p.y, mouseX, mouseY);
-        // line(mouseDownX, mouseDownY, midpoint.p.x, midpoint.p.y);
-        // line(midpoint.p.x, midpoint.p.y, mouseX, mouseY);
+        stroke(map(note, 50, 70, 0, 255), saturation, 255, 128);
+        line(mouseDownX, mouseDownY, mouseX, mouseY);
         pop();
     }
 
@@ -115,13 +83,6 @@ function mousePressed() {
         note = Math.floor(Math.random() * 20) + 50;
         noteOn(device, context, note, 100);
     }
-
-    midpoint.p.x = mouseX;
-    midpoint.p.y = mouseY;
-    midpoint.v.x = 0;
-    midpoint.v.y = 0;
-    midpoint.a.x = 0;
-    midpoint.a.y = 0;
 }
 
 function mouseReleased() {
