@@ -1,5 +1,5 @@
 // The name of our exported RNBO patch
-const patchExportURL = "export/snd.json";
+const patchExportURL = "https://cdn.jsdelivr.net/gh/apogees/www-js/www/export/snd.json";
 let note = 50;
 let mouseDownX = 0;
 let mouseDownY = 0;
