@@ -15,21 +15,21 @@ let k = 0.03;
 let damping = 0.05;
 let gravity = -1.6;
 
-let device, context;
-async function setupRNBO() {
-    [device, context] = await createRNBODevice(patchExportURL);
-    console.log("RNBO Device Created");
-
-    device.messageEvent.subscribe((event) => {
-        if (event.tag === "out2") { // message from the second outlet
-            currentLFOValue = event.payload;
-        }
-    });
-}
+// let device, context;
+// async function setupRNBO() {
+//     [device, context] = await createRNBODevice(patchExportURL);
+//     console.log("RNBO Device Created");
+//
+//     device.messageEvent.subscribe((event) => {
+//         if (event.tag === "out2") { // message from the second outlet
+//             currentLFOValue = event.payload;
+//         }
+//     });
+// }
 
 // We can't await here because it's top level, so we have to check later
 // if device and context have been assigned
-setupRNBO();
+// setupRNBO();
 
 function updateMidpoint() {
     midpoint.p.x += midpoint.v.x;
@@ -57,7 +57,7 @@ function draw() {
     if (!mouseIsPressed) {
         currentLFOValue = 1.0;
     } else {
-        updateMidpoint();
+        currentLFOValue = 0.1;
     }
     const weight = map(currentLFOValue, 0, 1, 0, 20);
     const saturation = map(currentLFOValue, 0, 1, 255, 128);
@@ -92,29 +92,29 @@ function draw() {
     strokeWeight(2 * currentLFOValue);
     rect(mouseX - radius, mouseY - radius, 2 * radius, 2 * radius, rounding * radius);
 
-    if (device) {
-        const mouseDelta = Math.abs(mouseX - mouseDownX);
-        const mouseDeltaNormalized = map(mouseDelta, 0, width / 2, 0, 1);
-        const tremolo = device.parametersById.get("tremolo");
-        tremolo.normalizedValue = mouseDeltaNormalized;
-
-        const mouseDeltaY = Math.abs(mouseY - mouseDownY);
-        const mouseDeltaNormalizedY = map(mouseDeltaY, 0, height / 2, 0, 1);
-        const drive = device.parametersById.get("poly/overdrive/drive");
-        drive.normalizedValue = mouseDeltaNormalizedY;
-        rounding = map(drive.normalizedValue, 0, 1, 1, 0);
-    }
+    // if (device) {
+    //     const mouseDelta = Math.abs(mouseX - mouseDownX);
+    //     const mouseDeltaNormalized = map(mouseDelta, 0, width / 2, 0, 1);
+    //     const tremolo = device.parametersById.get("tremolo");
+    //     tremolo.normalizedValue = mouseDeltaNormalized;
+    //
+    //     const mouseDeltaY = Math.abs(mouseY - mouseDownY);
+    //     const mouseDeltaNormalizedY = map(mouseDeltaY, 0, height / 2, 0, 1);
+    //     const drive = device.parametersById.get("poly/overdrive/drive");
+    //     drive.normalizedValue = mouseDeltaNormalizedY;
+    //     rounding = map(drive.normalizedValue, 0, 1, 1, 0);
+    // }
 }
 
 function mousePressed() {
     mouseDownX = mouseX;
     mouseDownY = mouseY;
 
-    if (device) {
-        context.resume();
-        note = Math.floor(Math.random() * 20) + 50;
-        noteOn(device, context, note, 100);
-    }
+    // if (device) {
+    //     context.resume();
+    //     note = Math.floor(Math.random() * 20) + 50;
+    //     noteOn(device, context, note, 100);
+    // }
 
     midpoint.p.x = mouseX;
     midpoint.p.y = mouseY;
@@ -124,8 +124,8 @@ function mousePressed() {
     midpoint.a.y = 0;
 }
 
-function mouseReleased() {
-    if (device) {
-        noteOff(device, context, note);
-    }
-}
+// function mouseReleased() {
+//     if (device) {
+//         noteOff(device, context, note);
+//     }
+// }
