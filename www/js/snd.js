@@ -1,4 +1,4 @@
-const patchExportURL = "export/Soydan.export.json";
+const patchExportURL = "https://cdn.jsdelivr.net/gh/apogees/www-js@latest/www/export/Soydan.export.json";
 
 let note = undefined;
 let mouseDownX = 0;
