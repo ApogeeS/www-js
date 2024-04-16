@@ -18,7 +18,8 @@ async function setupRNBO() {
 setupRNBO();
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent('embed02');
   current = createVector(0,0);
   previous = createVector(0,0);
 }
