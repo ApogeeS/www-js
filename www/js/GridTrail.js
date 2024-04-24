@@ -1,13 +1,13 @@
-const CELL_SIZE = 20; // size of each cell in the grid
-const COLOR_R = 79;
-const COLOR_G = 38;
-const COLOR_B = 233;
+const CELL_SIZE = 30; // size of each cell in the grid
+const COLOR_R = 143;
+const COLOR_G = 255;
+const COLOR_B = 0;
 const STARTING_ALPHA = 200;
-const BACKGROUND_COLOR = 31;
-const PROB_OF_NEIGHBOR = 0.5;
-const AMT_FADE_PER_FRAME = 5;
+const BACKGROUND_COLOR = 0;
+const AMT_FADE_PER_FRAME = 20;
 
 // VARIABLES
+let probNeighbor = 0.0;
 let colorWithAlpha;
 let numRows;
 let numCols;
@@ -17,7 +17,7 @@ let allNeighbors = []; // Array to store all neighbors
 
 function setup() {
   let cnv = createCanvas(windowWidth, windowHeight);
-  canvas.parent('wrapper');
+  cnv.parent("wrapper");
   cnv.style("position", "fixed");
   cnv.style("inset", 0);
   cnv.style("z-index", -1);
@@ -87,7 +87,7 @@ function getRandomNeighbors(row, col) {
 
       // If the cell is not the given cell, is within bounds, and has a 50% chance,
       // add the neighboring cell to the neighbors array
-      if (!isCurrentCell && isInBounds && Math.random() < PROB_OF_NEIGHBOR) {
+      if (!isCurrentCell && isInBounds && Math.random() < probNeighbor) {
         neighbors.push({
           row: neighborRow,
           col: neighborCol,
@@ -106,3 +106,18 @@ function windowResized() {
   numRows = Math.ceil(windowHeight / CELL_SIZE); // number of rows in the grid
   numCols = Math.ceil(windowWidth / CELL_SIZE); // number of columns in the grid
 }
+
+function mousePressed() {
+  probNeighbor = 0.5;
+}
+
+function mouseReleased() {
+  probNeighbor = 0.0;
+}
+
+// function mouseDragged() {
+//   if (sliding) {
+//     let newValue = map(mouseX, sliderX, sliderX + sliderWidth, 0, 100);
+//     sliderValue = constrain(newValue, 0, 100);
+//   }
+// }
