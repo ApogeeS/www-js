@@ -17,6 +17,7 @@ let allNeighbors = []; // Array to store all neighbors
 
 function setup() {
   let cnv = createCanvas(windowWidth, windowHeight);
+  canvas.parent('wrapper');
   cnv.style("position", "fixed");
   cnv.style("inset", 0);
   cnv.style("z-index", -1);
